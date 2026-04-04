@@ -1,4 +1,4 @@
-name: install on Ubuntu 24.04 
+name: install on Ubuntu
 
 on:
   push:
@@ -6,10 +6,14 @@ on:
 
 jobs:
   install:
-    name: install on Ubuntu 24.04
-    runs-on: ubuntu-24.04
+    name: install on Ubuntu ${{ matrix.ubuntu-version }}
+    runs-on: ubuntu-${{ matrix.ubuntu-version }}
+    strategy:
+      matrix:
+        ubuntu-version: [22.04, 24.04]
     steps:
       - uses: actions/checkout@v4
-      - name: install 
+      - name: install
         run: |
           ./install.sh
+          claude-desktop --debug
