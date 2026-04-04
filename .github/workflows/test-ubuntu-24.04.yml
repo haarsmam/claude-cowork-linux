@@ -1,0 +1,15 @@
+name: install on Ubuntu 24.04 
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  install:
+    name: install on Ubuntu 24.04
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: install 
+        run: |
+          ./install.sh
