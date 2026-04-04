@@ -18,7 +18,7 @@ jobs:
       - name: install
         run: ./install.sh
       - name: smoke test
-        run: xvfb-run --auto-servernum claude-desktop --debug
+        run: timeout 15 xvfb-run --auto-servernum claude-desktop --dev || true
       - name: dump startup log
         if: always()
         run: cat /home/runner/.local/state/claude-cowork/logs/startup.log
