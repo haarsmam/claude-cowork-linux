@@ -17,6 +17,10 @@ jobs:
         run: sudo apt-get install -y xvfb
       - name: install
         run: ./install.sh
+      - name: overlay local checkout
+        run: |
+          # install.sh clones from GitHub; override with the branch under test
+          rsync -a --exclude=linux-app-extracted ./ ~/.local/share/claude-desktop/
       - name: smoke test
         run: |
           timeout 60 xvfb-run --auto-servernum claude-desktop --devtools 2>&1 | tee /tmp/smoke.log || true
