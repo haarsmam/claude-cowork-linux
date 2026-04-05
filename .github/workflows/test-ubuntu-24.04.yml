@@ -18,8 +18,14 @@ jobs:
       - name: install
         run: ./install.sh
       - name: smoke test
-        run: timeout 60 xvfb-run --auto-servernum claude-desktop --devtools || true
-      - name: dump startup log
+        run: |
+          timeout 60 xvfb-run --auto-servernum claude-desktop --devtools 2>&1 | tee /tmp/smoke.log || true
+      - name: dump logs
         if: always()
-        run: cat /home/runner/.local/state/claude-cowork/logs/startup.log
-
+        run: |
+          echo "=== smoke test output ==="
+          cat /tmp/smoke.log || echo "(no smoke output captured)"
+          echo "=== startup.log ==="
+          cat /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null || echo "(startup.log missing or empty)"
+          echo "=== log dir listing ==="
+          ls -la /home/runner/.local/state/claude-cowork/logs/ 2>/dev/null || echo "(log dir not found)"
