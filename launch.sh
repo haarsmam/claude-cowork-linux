@@ -156,6 +156,10 @@ fi
 _args=()
 _perf=false
 _dev=false
+# Inherit dev mode from env (launcher exports CLAUDE_DEVTOOLS but shifts the flag)
+if [[ -n "${CLAUDE_DEVTOOLS:-}" ]]; then
+  _dev=true
+fi
 for arg in "$@"; do
   if [[ "$arg" == "--devtools" ]]; then
     export CLAUDE_DEVTOOLS=1
