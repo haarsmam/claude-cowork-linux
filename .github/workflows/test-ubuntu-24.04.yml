@@ -23,7 +23,7 @@ jobs:
           rsync -a --exclude=linux-app-extracted ./ ~/.local/share/claude-desktop/
       - name: smoke test
         run: |
-          timeout 60 xvfb-run --auto-servernum claude-desktop --devtools 2>&1 | tee /tmp/smoke.log || true
+          timeout 15 xvfb-run --auto-servernum claude-desktop --devtools 2>&1 | tee /tmp/smoke.log || true
       - name: dump logs
         if: always()
         run: |
@@ -33,3 +33,12 @@ jobs:
           cat /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null || echo "(startup.log missing or empty)"
           echo "=== log dir listing ==="
           ls -la /home/runner/.local/state/claude-cowork/logs/ 2>/dev/null || echo "(log dir not found)"
+      - name: check for errors
+        if: always()
+        run: |
+          if grep -iqE '\berror\b|fatal|exception|ENOENT|segfault' /tmp/smoke.log /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null; then
+            echo "::error::Errors found in logs"
+            grep -inE '\berror\b|fatal|exception|ENOENT|segfault' /tmp/smoke.log /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null
+            exit 1
+          fi
+          echo "No errors found in logs"
