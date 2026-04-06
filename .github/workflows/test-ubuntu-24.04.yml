@@ -37,8 +37,8 @@ jobs:
         if: always()
         run: |
           if grep -iqE '\berror\b|fatal|exception|ENOENT|segfault' /tmp/smoke.log /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null; then
-            echo "::error::Errors found in logs"
+            echo "::error::Errors found in startup.log"
             grep -inE '\berror\b|fatal|exception|ENOENT|segfault' /tmp/smoke.log /home/runner/.local/state/claude-cowork/logs/startup.log 2>/dev/null
             exit 1
           fi
-          echo "No errors found in logs"
+          echo "No errors found in startup.log"
